@@ -17,14 +17,13 @@
 
 function mapping = getmapping(samples,mappingtype)
 % Version 0.1.1
-% Authors: Marko Heikkilä and Timo Ahonen
+% Authors: Marko Heikkil and Timo Ahonen
 
 % Changelog
 % 0.1.1 Changed output to be a structure
 % Fixed a bug causing out of memory errors when generating rotation 
 % invariant mappings with high number of sampling points.
 % Lauge Sorensen is acknowledged for spotting this problem.
-
 
 
 table = 0:2^samples-1;
@@ -34,7 +33,10 @@ index   = 0;
 if strcmp(mappingtype,'u2') %Uniform 2
   newMax = samples*(samples-1) + 3; 
   for i = 0:2^samples-1
-    j = bitset(bitshift(i,1,samples),1,bitget(i,samples)); %rotate left
+      % original code below: 
+      %j = bitset(bitshift(i,1,samples),1,bitget(i,samples)); %rotate left
+   
+    j = bitset(bitshift(i,1),1,bitget(i,samples)); %rotate left
     numt = sum(bitget(bitxor(i,j),1:samples)); %number of 1->0 and
                                                %0->1 transitions
                                                %in binary string 
@@ -73,7 +75,11 @@ end
 if strcmp(mappingtype,'riu2') %Uniform & Rotation invariant
   newMax = samples + 2;
   for i = 0:2^samples - 1
-    j = bitset(bitshift(i,1,samples),1,bitget(i,samples)); %rotate left
+      % original code below: 
+      %j = bitset(bitshift(i,1,samples),1,bitget(i,samples)); %rotate left
+   
+    j = bitset(bitshift(i,1),1,bitget(i,samples)); %rotate left
+    
     numt = sum(bitget(bitxor(i,j),1:samples));
     if numt <= 2
       table(i+1) = sum(bitget(i,1:samples));

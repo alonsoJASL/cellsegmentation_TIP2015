@@ -1,5 +1,5 @@
-clear;
-close all;
+%clear;
+%close all;
 clc;
 warning off;
 pause(0.5);
