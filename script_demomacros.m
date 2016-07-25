@@ -210,6 +210,33 @@ fullOverlappingSegmentation(imCytoSet, storageCommonPath, ...
                             beta_logistic_set, kappa_set, chi_set, loop);
                         
 %% 
+close all
+
+load('/Volumes/ALONSO/MACROPHAGES/MACROS_levelset_OUT/LSF/LSF2/LSF_2_beta_5_kappa_13_chi_3_iterIn_20_iterOut_2.mat')
+% load(strcat(outputpath,storageDist, 'LSF5/',...
+%    'LSF_5_beta_5_kappa_13_chi_3_iterIn_20_iterOut_2.mat'));
+resultlsf = LSF_5{1};
+numCells = size(resultlsf,1);
+
+height = size(resultlsf{1,1},1);
+width = size(resultlsf{1,1},2);
+
+overlappedCells = zeros(height, width, numCells);
+
+n = 1;
+for ix=1:numCells
+    n = getPrimes(n,true);
+    overlappedCells(:,:,ix) = n.*resultlsf{ix,1};
+    
+    imagesc(overlappedCells(:,:,ix)); title(num2str(n));
+    pause;
+end 
+
+
+figure(1)
+imagesc(changeOverlapRepresentation(overlappedCells)); cooljet3;
+
+%% 
 
 load(strcat(outputpath,storageCommonPath,'SceneCytoClumpMaskSet.mat'));
 load(strcat(outputpath,storageCommonPath,'NucleiMask.mat'));
