@@ -26,7 +26,6 @@ beta_logistic_set = (5)';
 %| Joint Level Set Parameter |
 %+---------------------------+
 kappa_set = (13)';
-
 chi_set = (3)';
 
 %+---------------------------------+

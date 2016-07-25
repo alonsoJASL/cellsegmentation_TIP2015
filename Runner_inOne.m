@@ -11,7 +11,7 @@ function Runner_inOne( DSOption, path_src_nuclei_images_folder, path_src_cyto_im
 % Common parameters for GMM-based 
 % clump training/testing
 %==================================
-thr.minCellSize = 1000;
+inParam.minCellSize = 1000;
  
 %==================================
 % Level set paramters for clump 
@@ -259,7 +259,7 @@ catch
         %+--------------------------------------------------+
         for j = 1:max(imCBMaskLabels(:))
             idx = find(imCBMaskLabels == j);
-            if size(idx,1) < thr.minCellSize
+            if size(idx,1) < inParam.minCellSize
                 GMMCytoClumpMask(idx) = 1;
                 fprintf('OK Tiny\n');
             end
