@@ -170,10 +170,11 @@ clear Imaux;
 %% RED AND GREEN SEPARATE - Loading the images into memory
 
 if length(names) > 1
-    [X, xatt] = readParseSome(strcat(dn,ds),names);
+    [X, xatt] = readParseSome(filename,names);
     imNum = size(X,4);
 else 
-    [X, xatt] = readParseInput(strcat(dn,ds, 'man00', num2str(names),'.tif'));
+    filename = strcat('man00', num2str(names),'.tif');
+    [X, xatt] = readParseInput(strcat(dn,ds,filename));
     imNum = 1;
 end
 
@@ -239,11 +240,18 @@ fullOverlappingSegmentation(imCytoSet, storageCommonPath, ...
                         inParam, outputpath, storageInitial, storageDist,...
                             beta_logistic_set, kappa_set, chi_set, loop);
                         
-%% 
+%% COMPARE RESULTS - Single image experiment
+
+% Load first result form run.
 close all
 
+<<<<<<< HEAD
 load(strcat(outputpath,storageDist, 'LSF5\',...
     'LSF_5_beta_5_kappa_13_chi_3_iterIn_20_iterOut_2.mat'));
+=======
+load(strcat(outputpath,storageDist, 'LSF5/',...
+   'LSF_5_beta_5_kappa_13_chi_3_iterIn_20_iterOut_2.mat'));
+>>>>>>> origin/master
 resultlsf = LSF_5{1};
 numCells = size(resultlsf,1);
 
@@ -256,13 +264,66 @@ n = 1;
 for ix=1:numCells
     n = getPrimes(n,true);
     overlappedCells(:,:,ix) = n.*resultlsf{ix,1};
+<<<<<<< HEAD
     
     %imagesc(overlappedCells(:,:,ix)); title(num2str(n));
     %pause;
 end 
 
+=======
+end 
+
+figure(2)
+imagesc(changeOverlapRepresentation(overlappedCells)); 
+cooljet3;
+title('Segmentation Result');
+
+figure(21)
+load(strcat(outputpath,storageCommonPath,'SceneCytoClumpMaskSet.mat'));
+load(strcat(outputpath,storageCommonPath,'NucleiMask.mat'));
+imagesc(SceneCytoClumpMaskSet{1}+NucleiMaskSet{1});
+colormap bone;
+title('LSM initial clumps and nuclei')
+
+% Voronoi result
+load(strcat(outputpath,storageVoronoi,'CompleteSegmentation.mat'));
+figure(3)
+imagesc(dataLa{1}(:,:,2));
+cooljet3;
+title('Voronoi');
+
+% load ground truth
+load(strcat(dn,ds(1:end-1),'_GT/', filename(1:end-4),'.mat'));
+>>>>>>> origin/master
 figure(1)
-imagesc(changeOverlapRepresentation(overlappedCells)); cooljet3;
+imagesc(dataBin(:,:,2));
+cooljet3;
+title('Ground truth');
+
+% just to check 
+figure(4)
+imshow(X);
+
+% initial guess 
+load(strcat(outputpath, storageInitial,'initialPhis_beta_5.mat'));
+initialGuess = roughInitialGuessMaskSet_byImage{1};
+
+figure(22);
+layer = 20;
+imagesc(initialGuess{layer,1});
+title(strcat('Initial guess for Layer: ', num2str(layer)));
+
+figure(23)
+imagesc(overlappedCells(:,:,layer));
+title(strcat('Layer: ',num2str(layer))); 
+%%
+figure(23)
+for ix=1:numCells
+    imagesc(overlappedCells(:,:,ix));
+    title(strcat('Layer: ',num2str(ix))); 
+    pause;
+end 
+
 
 %% 
 
