@@ -15,16 +15,18 @@ names = [55];% 75 95];
 
 name = 'man00';
 
-outputpath = fullfile(dn, [ds(1:end-1) '_levelset_OUT']);
+outputpath = strcat(dn, ds(1:end-1), '_levelset_OUT/');
 storageCommonPath = 'Common/';
 storageInitial= 'Initial/';
 storageDist= 'LSF/';
+storageVoronoi = 'Voronoi/';
 
 if ~isdir(outputpath)
     mkdir(outputpath);
-    mkdir(fullfile(outputpath, storageCommonPath));
-    mkdir(fullfile(outputpath, storageInitial));
-    mkdir(fullfile(outputpath, storageDist));
+    mkdir(strcat(outputpath, storageCommonPath));
+    mkdir(strcat(outputpath, storageInitial));
+    mkdir(strcat(outputpath, storageDist));
+    mkdir(strcat(outputpath, storageVoronoi));
 end
 
 addpath(genpath(pwd));
@@ -323,24 +325,17 @@ end
 Bvoronoi = dataLa{1};
 
 [jmV, compattV] = segmentationComparison(Bvoronoi,dataBin);
-[bstatsV, gtstatsV] = getSegmentationStats(jmV, compattV);
+[bstatsV, gtstatsLM] = getSegmentationStats(jmV, compattV);
 
-sGT = compattV.stackedGT;
+sGT = compattLSM.stackedGT;
 for i=1:size(sGT,3)
-    sGT(:,:,i) = (sGT(:,:,i)>0).*gtstatsV.precision(i);
+    sGT(:,:,i) = (sGT(:,:,i)>0).*gtstatsLSM.precision(i);
 end
 
 %%
 figure(901)
 imagesc(max(sGT,[],3));
 title('Segmentation precision on Level Set Method');
-axis off;
-colormap(1-hot);
-colorbar;
-
-figure(902)
-imagesc(max(sGT,[],3));
-title('Segmentation precision on V');
 axis off;
 colormap(1-hot);
 colorbar;
