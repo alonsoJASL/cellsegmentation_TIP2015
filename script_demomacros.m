@@ -59,6 +59,36 @@ if ~isdir(outputpath)
 end
 
 addpath(genpath(pwd));
+
+%% Initialisation WINDOWS 
+
+clear all;
+close all;
+clc;
+
+warning('off', 'all');
+
+plat = 'win';
+[dn,ds] = loadnames('macros', plat);
+names = 55;%[55 75 95];
+
+name = 'man00';
+
+outputpath = strcat(dn, ds(1:end-1), '_levelset_OUT\');
+storageCommonPath = 'Common\';
+storageInitial= 'Initial\';
+storageDist= 'LSF\';
+storageVoronoi = 'Voronoi\';
+
+if ~isdir(outputpath)
+    mkdir(outputpath);
+    mkdir(strcat(outputpath, storageCommonPath));
+    mkdir(strcat(outputpath, storageInitial));
+    mkdir(strcat(outputpath, storageDist));    
+    mkdir(strcat(outputpath, storageVoronoi));
+end
+
+addpath(genpath(pwd));
 %% Clear previous results and outputs.
 % ======================================
 unix(['rm -rf ' 32 outputpath]);
@@ -212,9 +242,8 @@ fullOverlappingSegmentation(imCytoSet, storageCommonPath, ...
 %% 
 close all
 
-load('/Volumes/ALONSO/MACROPHAGES/MACROS_levelset_OUT/LSF/LSF2/LSF_2_beta_5_kappa_13_chi_3_iterIn_20_iterOut_2.mat')
-% load(strcat(outputpath,storageDist, 'LSF5/',...
-%    'LSF_5_beta_5_kappa_13_chi_3_iterIn_20_iterOut_2.mat'));
+load(strcat(outputpath,storageDist, 'LSF5\',...
+    'LSF_5_beta_5_kappa_13_chi_3_iterIn_20_iterOut_2.mat'));
 resultlsf = LSF_5{1};
 numCells = size(resultlsf,1);
 
@@ -228,10 +257,9 @@ for ix=1:numCells
     n = getPrimes(n,true);
     overlappedCells(:,:,ix) = n.*resultlsf{ix,1};
     
-    imagesc(overlappedCells(:,:,ix)); title(num2str(n));
-    pause;
+    %imagesc(overlappedCells(:,:,ix)); title(num2str(n));
+    %pause;
 end 
-
 
 figure(1)
 imagesc(changeOverlapRepresentation(overlappedCells)); cooljet3;
