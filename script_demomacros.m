@@ -263,10 +263,7 @@ for ix=1:numCells
     %pause;
 end 
 
-figure(2)
-imagesc(changeOverlapRepresentation(overlappedCells)); 
-cooljet3;
-title('Segmentation Result');
+
 
 figure(21)
 load(strcat(outputpath,storageCommonPath,'SceneCytoClumpMaskSet.mat'));
@@ -277,18 +274,26 @@ title('LSM initial clumps and nuclei')
 
 % Voronoi result
 load(strcat(outputpath,storageVoronoi,'CompleteSegmentation.mat'));
-figure(3)
-imagesc(dataLa{1}(:,:,2));
-cooljet3;
-title('Voronoi');
-
 % load ground truth
 load(strcat(dn,ds(1:end-1),'_GT/', filename(1:end-4),'.mat'));
 
 figure(1)
+subplot(131);
 imagesc(dataBin(:,:,2));
 cooljet3;
 title('Ground truth');
+
+%figure(2)
+subplot(132);
+imagesc(changeOverlapRepresentation(overlappedCells)); 
+cooljet3;
+title('Segmentation Result');
+
+%figure(3)
+subplot(133);
+imagesc(dataLa{1}(:,:,2));
+cooljet3;
+title('Voronoi');
 
 % just to check 
 figure(4)
@@ -332,13 +337,15 @@ end
 
 %%
 figure(901)
+subplot(121);
 imagesc(max(sGT,[],3));
 title('Segmentation precision on Level Set Method');
 axis off;
 colormap(1-hot);
 colorbar;
 
-figure(902)
+%figure(902)
+subplot(122);
 imagesc(max(sGT,[],3));
 title('Segmentation precision on V');
 axis off;
