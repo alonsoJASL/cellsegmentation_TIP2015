@@ -15,18 +15,16 @@ names = [55];% 75 95];
 
 name = 'man00';
 
-outputpath = strcat(dn, ds(1:end-1), '_levelset_OUT/');
+outputpath = fullfile(dn, [ds(1:end-1) '_levelset_OUT']);
 storageCommonPath = 'Common/';
 storageInitial= 'Initial/';
 storageDist= 'LSF/';
-storageVoronoi = 'Voronoi/';
 
 if ~isdir(outputpath)
     mkdir(outputpath);
-    mkdir(strcat(outputpath, storageCommonPath));
-    mkdir(strcat(outputpath, storageInitial));
-    mkdir(strcat(outputpath, storageDist));
-    mkdir(strcat(outputpath, storageVoronoi));
+    mkdir(fullfile(outputpath, storageCommonPath));
+    mkdir(fullfile(outputpath, storageInitial));
+    mkdir(fullfile(outputpath, storageDist));
 end
 
 addpath(genpath(pwd));
