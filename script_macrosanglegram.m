@@ -1,15 +1,14 @@
 % SCRIPT FILE: 
 %
 %% 
-tidy; 
+macrosightpath = 'Users/jsolisl/Documents/propio/PhD/SW/macrosight';
+
+initscript;
 warning('off', 'all');
-[dn,ds] = loadnames('macros', chooseplatform);
 
-names = [55];% 75 95];
+whichFr = 55; 
 
-name = 'man00';
-
-outputpath = fullfile(dn, [ds(1:end-1) '_levelset_OUT']);
+outputpath = fullfile(dn, [ds(1:end-1) '_levelset_OUT/']);
 storageCommonPath = 'Common/';
 storageInitial= 'Initial/';
 storageDist= 'LSF/';
@@ -44,9 +43,9 @@ kappa_set = (13)';
 chi_set = (3)';
 % Joint Level Set Updating Policy (create necessary 
 loop = 5;
-if ~isdir(strcat(outputpath, storageDist, 'LSF1/'))
-    for i = 1:loop
-        mkdir(strcat(outputpath, storageDist, 'LSF', num2str(i), '/'));
+if ~isdir(fullfile(outputpath, storageDist, 'LSF1/'))
+    for ix = 1:loop
+        mkdir(fullfile(outputpath, storageDist, 'LSF', num2str(ix), '/'));
     end
 end
 
@@ -74,3 +73,37 @@ inParam.iter_out_extent = 2;
 % nLinePartition = 10;
 inParam.min_PtDistance = 5;
 inParam.min_TinyFragments_DistMap = 500;
+
+%% RED AND GREEN SEPARATE - Loading the images into memory
+imNum = length(whichFr);
+imCytoSet = cell(imNum,1);
+
+NucleiMaskSet = cell(imNum,1);
+    SceneCytoClumpMaskSet = cell(imNum,1);
+
+for ix=1:imNum
+    ukfr = getdatafromhandles(handles, filenames{whichFr(ix)});
+    IRaux = abs(ukfr.dataR - max(ukfr.dataR(:)));
+    IGaux = abs(ukfr.dataGR - max(ukfr.dataGR(:)));
+    
+    % for this method, a uint8 image is needed.
+    % Rescaling is optional.
+    imNucleiSet{ix} = im2uint8(imresize(IRaux,1));
+    imCytoSet{ix} = im2uint8(imresize(IGaux,1));
+    
+    NucleiMaskSet{ix} = ukfr.dataL>0;
+    SceneCytoClumpMaskSet{ix} = ukfr.dataGL>0;
+end
+save(fullfile(outputpath,storageCommonPath, 'NucleiMask.mat'),'NucleiMaskSet');
+save(fullfile(outputpath,storageCommonPath, 'SceneCytoClumpMaskSet.mat'),...
+    'SceneCytoClumpMaskSet');
+
+clear IGaux IRaux;
+
+
+%% RUN LEVEL SET METHOD FOR OVERLAPPING
+clc;
+
+fullOverlappingSegmentation(imCytoSet, storageCommonPath, ...
+                        inParam, outputpath, storageInitial, storageDist,...
+                            beta_logistic_set, kappa_set, chi_set, loop);
