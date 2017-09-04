@@ -25,11 +25,8 @@
 
 # Image files #
 ###############
-*.tif
-*.png
 *.jpg
 *.jpeg
-*.gif
 
 # matlab files #
 ##########
