@@ -1,4 +1,3 @@
-# Level set method: Combination with anglegram
 In this log file, the developments of script file
 [`script_macrosanglegram`](../script_macrosanglegram.m)
 to adjust the junction positions and the cell candidates generated from
